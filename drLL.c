@@ -1,3 +1,6 @@
+/* Grupo de trabajo 03. Tomás Mendizábal y Alejandro Díaz Cuéllar */
+/* 100461170@alumos.uc3m.es 100472173@alumnos.uc3m.es*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -11,8 +14,7 @@ int number; // and the value of the number
 
 int line_counter = 1;
 
-int rd_lex()
-{
+int rd_lex(){
     int c = getchar();
     // tratamiento parentesis y espacios
     if (c !='(') {
