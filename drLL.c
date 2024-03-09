@@ -24,6 +24,7 @@ int rd_lex(){
         scanf("%d", &g_number);
         g_token = T_NUMBER;  
         int next_d = getchar();
+        // next character
         if (next_d == ')'){
             ungetc(next_d, stdin);
             return g_token;
@@ -37,6 +38,7 @@ int rd_lex(){
     if (isalpha(c)){
         g_token = T_VARIABLE;
         int space = getchar();
+        // next character
         if (space != ' '){
             fprintf(stderr, "Syntax error in line: %d.\n", g_line_counter);
         }
