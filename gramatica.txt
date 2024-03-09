@@ -18,6 +18,6 @@ JFLAP:
 (+ 1 (= (1 3))) // sentencia que es valida y habra que controlar
 S-> E s        {s = \n}
 E-> (R
-R-> o P P ) | = v P) {Operador(token)= +,-,*,/}
-P-> E | n | v     {Numero(token)= 0-9, variable(token) = }
+R-> o P P) | = v P) {Operador(token)= +,-,*,/}
+P-> E | n | v     {Numero(token)= 0-9, variable(token)}
 
