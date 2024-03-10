@@ -10,9 +10,9 @@
 #define T_OP 1002
 #define T_VARIABLE 1003
 
+
 int g_token;  // Here we store the current token/literal
 int g_number; // and the value of the number
-
 int g_line_counter = 1;
 
 // TODO: fix line error
@@ -67,59 +67,55 @@ void rd_syntax_error(int expected, int token, char * output){
     fprintf(stderr, output, token, expected, "\n");
     exit(-1);
 }
+
+void match_symbol(int expected_token){
+    if (g_token != expected_token){
+        rd_syntax_error(expected_token, g_token, "token %d expected, but %d was read.");
+    }
+    rd_lex();
+}
+
+#define parse_endline() match_symbol('\n');
+#define parse_lparen() match_symbol('(');
+#define parse_rparen() match_symbol(')');
+
 void parse_statement(){
     parse_expresion();
-    rd_lex(); // new line
+    parse_endline();
 }
+
 void parse_expresion(){
-    rd_lex(); //left parenthesis
+    parse_lparen();
     parse_rest_expression();
 }
+
 void parse_rest_expression(){
-    rd_lex();
     switch(g_token){
         case '+':
-            parse_parameter(); 
-            parse_parameter();
-            rd_lex(); //parenthesis
-            break;
         case '-':
-            parse_parameter();
-            parse_parameter();
-            rd_lex(); // parenthesis
-            break;
         case '*':
-            parse_parameter();
-            parse_parameter();
-            rd_lex(); // parenthesis
-            break;
         case '/':
+            rd_lex();
             parse_parameter();
             parse_parameter();
-            rd_lex(); // parenthesis
             break;
         case '=':
             rd_lex();
             match_symbol(T_VARIABLE);
             parse_parameter();
-            rd_lex(); // parenthesis
             break;
         default: 
             rd_syntax_error(g_token, 0, "Token %d was read, but and operator was expected.\n");
     }
-}
-void match_symbol(int expected_token){
-    if (g_token != expected_token){
-        rd_syntax_error(expected_token, g_token, "token %d expected, but %d was read.");
-    }
+    parse_rparen();
 }
 
+//TODO: Revisar posible syntax_error
 void parse_parameter(){
-    rd_lex();
     switch(g_token){
         case T_NUMBER:
-            break;
         case T_VARIABLE:
+            rd_lex();
             break;
         default:
             parse_expresion();
@@ -129,6 +125,7 @@ void parse_parameter(){
 
 int main(){
     while (1){
+        rd_lex(); // new line
         parse_statement();
         printf("OK\n");
     }

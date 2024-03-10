@@ -10,7 +10,7 @@ limpiando:
 
 Sentencia-> Expresion \n
 Expresion-> (RestExpr
-RestExpr-> Operador Parametro Parametro) |  =Variable Parametro)
+RestExpr-> Operador Parametro Parametro) |  = Variable Parametro)
 Parametro -> Expresion | Numero | Variable 
 
 
