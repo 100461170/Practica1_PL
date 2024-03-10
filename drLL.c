@@ -1,5 +1,5 @@
-/* Grupo de trabajo 03. Tomás Mendizábal y Alejandro Díaz Cuéllar */
-/* 100461170@alumos.uc3m.es 100472173@alumnos.uc3m.es*/
+/* Grupo de trabajo 03. Alejandro Díaz Cuéllar y Tomás Mendizábal */
+/* 100472173@alumnos.uc3m.es 100461170@alumos.uc3m.es */
 
 #include "drLL.h"
 #include <stdio.h>
