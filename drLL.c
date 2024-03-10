@@ -15,7 +15,7 @@ int g_token;  // Here we store the current token/literal
 int g_number; // and the value of the number
 int g_line_counter = 1;
 
-// TODO: fix line error
+
 int rd_lex(){
     int c = getchar();
     // digits
@@ -31,6 +31,7 @@ int rd_lex(){
         }
         if (next_d != ' '){
             fprintf(stderr, "Syntax error in line: %d.\n", g_line_counter);
+            g_line_counter--;
         }
             return g_token;     
     }
@@ -41,6 +42,7 @@ int rd_lex(){
         // next character
         if (space != ' '){
             fprintf(stderr, "Syntax error in line: %d.\n", g_line_counter);
+            g_line_counter--;
         }
         return g_token; 
     }  
@@ -49,6 +51,7 @@ int rd_lex(){
         int next_char = getchar();
         if (next_char != ' ' && next_char != ')'){      
             fprintf(stderr, "Syntax error in line: %d.\n", g_line_counter);
+            g_line_counter--;
             exit(-1);
         }
         if (next_char == ')' || next_char == '\n'){
