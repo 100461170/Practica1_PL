@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <unistd.h>
 
 #define T_NUMBER 1001
 #define T_OP 1002
@@ -20,6 +21,12 @@ char g_output_str[MAX];
 // TODO: Test the number of line in errors. 
 int rd_lex(){
     int c = getchar();
+    // end of file
+    if (c == EOF) {// Detect End Of FIle
+        // printf ("\n");// Force an exit to avoid
+        exit (0) ;// a Syntax Error
+
+    }
     // digits
     if (isdigit(c)){
         ungetc(c, stdin);
@@ -87,18 +94,18 @@ void match_symbol(int expected_token){
 #define parse_lparen() match_symbol('(');
 #define parse_rparen() match_symbol(')');
 
-void parse_statement(){
+void parse_axiom(){ //S::=E
     parse_expresion();
     strcat(g_output_str, ". \n");
     printf("%s", g_output_str);
 }
 
-void parse_expresion(){
+void parse_expresion(){ // E::=(R
     parse_lparen();
     parse_rest_expression();
 }
 
-void parse_rest_expression(){
+void parse_rest_expression(){ //R::=oPP|=vP // o: Operador(token) = {+,-,*,/}. v: variable(token)
     switch(g_token){
         case '+':
         case '-':
@@ -129,7 +136,7 @@ void parse_rest_expression(){
 }
 
 //TODO: Revisar posible syntax_error
-void parse_parameter(){
+void parse_parameter(){//P::=E|v|n // n: numero(token). v: variable(token)
     switch(g_token){
         case T_NUMBER:
             char number_str[MAX];
@@ -148,12 +155,51 @@ void parse_parameter(){
     }
        
 }
-
-int main(){
-    while (1){
-        rd_lex(); // new line
-        parse_statement();
-        // printf("OK\n");
+int open_file(char *file_name){
+    // open file
+    char file[MAX];
+    getcwd(file, sizeof(file));
+    strcat(file, "/");
+    strcat(file, file_name);
+    // change standard input to file 
+    FILE *f = freopen(file, "r", stdin);
+    if (f == NULL){
+        return -1;
     }
-    system("PAUSE");
+    return 0;
+}
+
+int main(int argc, char *argv[]){
+    int flagMultiple = 1;
+    // check number of arguments
+    if (argc >= 2){
+        if (strcmp("-s", argv[1]) == 0){
+            flagMultiple = 0;
+        }
+    }
+    else{
+        fprintf(stderr, "Too few arguments.\n");
+        return -1;
+    }
+    int open_file_id;
+    // open input file
+    if (argc == 2){
+        open_file_id = open_file(argv[1]);
+    }
+    else{
+        open_file_id = open_file(argv[2]);
+    }
+    // check error with input file
+    if (open_file_id == -1){
+        fprintf(stderr, "Error opening input file.\n");
+        return -1;
+    }
+    do
+    {
+        rd_lex(); // new line
+        parse_axiom();
+        // printf("OK\n");
+    } while (flagMultiple);
+
+
 }
