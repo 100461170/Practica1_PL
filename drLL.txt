@@ -1,1 +1,10 @@
-(+ 1 2)
+(+ 1 4)
+(- 10 5)
+(* 7 67)
+(/ 169 13)
+(= A 78)
+(+ A 578)
+(+ 5 (- 20 15))
+(= B (* 24 13))
+(= A B) # poner una variable como segundo Parametro da error
+(+ 45 A) # en expresiones normales tambien da error

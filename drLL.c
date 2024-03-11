@@ -22,7 +22,7 @@ char g_output_str[MAX];
 int rd_lex(){
     int c = getchar();
     // end of file
-    if (c == EOF) {// Detect End Of FIle
+    if (c == EOF) {
         // printf ("\n");// Force an exit to avoid
         exit (0) ;// a Syntax Error
 
@@ -67,6 +67,7 @@ int rd_lex(){
             ungetc(next_char, stdin);
         }       
     }
+    
     // new line
     if (c == '\n'){
         g_line_counter++; // info for rd_syntax_error()
@@ -96,8 +97,11 @@ void match_symbol(int expected_token){
 
 void parse_axiom(){ //S::=E
     parse_expresion();
+    // print result
     strcat(g_output_str, ". \n");
     printf("%s", g_output_str);
+    // reset global string
+    memset(g_output_str, 0, strlen(g_output_str));
 }
 
 void parse_expresion(){ // E::=(R
@@ -155,19 +159,8 @@ void parse_parameter(){//P::=E|v|n // n: numero(token). v: variable(token)
     }
        
 }
-int open_file(char *file_name){
-    // open file
-    char file[MAX];
-    getcwd(file, sizeof(file));
-    strcat(file, "/");
-    strcat(file, file_name);
-    // change standard input to file 
-    FILE *f = freopen(file, "r", stdin);
-    if (f == NULL){
-        return -1;
-    }
-    return 0;
-}
+
+
 
 int main(int argc, char *argv[]){
     int flagMultiple = 1;
@@ -176,23 +169,6 @@ int main(int argc, char *argv[]){
         if (strcmp("-s", argv[1]) == 0){
             flagMultiple = 0;
         }
-    }
-    else{
-        fprintf(stderr, "Too few arguments.\n");
-        return -1;
-    }
-    int open_file_id;
-    // open input file
-    if (argc == 2){
-        open_file_id = open_file(argv[1]);
-    }
-    else{
-        open_file_id = open_file(argv[2]);
-    }
-    // check error with input file
-    if (open_file_id == -1){
-        fprintf(stderr, "Error opening input file.\n");
-        return -1;
     }
     do
     {
