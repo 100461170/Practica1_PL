@@ -5,6 +5,16 @@
 (= A 78)
 (+ A 578)
 (+ 5 (- 20 15))
+(/ A B)
 (= B (* 24 13))
-(= A B) # poner una variable como segundo Parametro da error
-(+ 45 A) # en expresiones normales tambien da error
+(= B (= C A))
+(* X (= Y 35))
+(* A (+ B (= C 5)))
+(* 34 (/ 5 (+ 23 67)))
+(+ 1 (+ 1 (+ 1 1)))
+(+ 89 (- 12 X))
+(+ x (+ x (+ x 1)))
+(= a (= b (* d 65)))
+(/ 89 (/ 89 (+ A B)))
+(= z (= z (= z 1)))
+(= A (= B (+ C A)))

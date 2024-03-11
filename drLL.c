@@ -49,6 +49,11 @@ int rd_lex(){
         g_token = T_VARIABLE;
         int space = getchar();
         // next character
+        if (space == ')'){
+            ungetc(space, stdin);
+            g_value = c;
+            return g_value;
+        }
         if (space != ' '){ 
             fprintf(stderr, "Syntax error in line: %d.\n", g_line_counter);
             exit(-1);
