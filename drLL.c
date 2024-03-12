@@ -96,8 +96,8 @@ void match_symbol(int expected_token){
     rd_lex();
 }
 
-#define parse_lparen() match_symbol('(');
-#define parse_rparen() match_symbol(')');
+#define parse_open_paren() match_symbol('(');
+#define parse_close_paren() match_symbol(')');
 
 void parse_axiom(){ //S::=E
     parse_expresion();
@@ -109,7 +109,7 @@ void parse_axiom(){ //S::=E
 }
 
 void parse_expresion(){ // E::=(R
-    parse_lparen();
+    parse_open_paren();
     parse_rest_expression();
 }
 
@@ -140,7 +140,7 @@ void parse_rest_expression(){ //R::=oPP|=vP // o: Operador(token) = {+,-,*,/}. v
             }
             rd_syntax_error(g_token, 0, "Token %d was read, but an operator was expected.\n");
     }
-    parse_rparen();
+    parse_close_paren();
 }
 
 void parse_parameter(){//P::=E|v|n // n: numero(token). v: variable(token)
