@@ -100,7 +100,7 @@ void match_symbol(int expected_token){
 #define parse_close_paren() match_symbol(')');
 
 void parse_axiom(){ //S::=E
-    parse_expresion();
+    parse_expression();
     // print result
     strcat(g_output_str, ". \n");
     printf("%s", g_output_str);
@@ -108,7 +108,7 @@ void parse_axiom(){ //S::=E
     memset(g_output_str, 0, strlen(g_output_str));
 }
 
-void parse_expresion(){ // E::=(R
+void parse_expression(){ // E::=(R
     parse_open_paren();
     parse_rest_expression();
 }
@@ -158,7 +158,7 @@ void parse_parameter(){//P::=E|v|n // n: numero(token). v: variable(token)
             rd_lex();
             break;
         default:
-            parse_expresion();
+            parse_expression();
     }
        
 }
