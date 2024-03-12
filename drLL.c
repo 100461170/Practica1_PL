@@ -18,14 +18,13 @@ int g_value; // and the value of the number
 int g_line_counter = 1;
 char g_output_str[MAX];
 
-// TODO: Test the number of line in errors. 
+// TODO: clean code
 int rd_lex(){
     int c = getchar();
     // end of file
     if (c == EOF) {
         // printf ("\n");// Force an exit to avoid
         exit (0) ;// a Syntax Error
-
     }
     // digits
     if (isdigit(c)){
@@ -144,7 +143,6 @@ void parse_rest_expression(){ //R::=oPP|=vP // o: Operador(token) = {+,-,*,/}. v
     parse_rparen();
 }
 
-//TODO: Revisar posible syntax_error
 void parse_parameter(){//P::=E|v|n // n: numero(token). v: variable(token)
     switch(g_token){
         case T_NUMBER:
