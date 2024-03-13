@@ -1,7 +1,6 @@
 /* Grupo de trabajo 03. Alejandro Díaz Cuéllar y Tomás Mendizábal */
 /* 100472173@alumnos.uc3m.es 100461170@alumos.uc3m.es */
 
-#include "drLL.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -9,8 +8,7 @@
 #include <unistd.h>
 
 #define T_NUMBER 1001
-#define T_OP 1002
-#define T_VARIABLE 1003
+#define T_VARIABLE 1002
 #define MAX 256
 
 int g_token;  // Here we store the current token/literal
@@ -18,60 +16,36 @@ int g_value; // and the value of the number
 int g_line_counter = 1;
 char g_output_str[MAX];
 
-// TODO: clean code
-int rd_lex(){
-    int c = getchar();
+int rd_lex();
+void rd_syntax_error(int expected, int token, char *output);
+void parse_axiom();
+void parse_expression();
+void parse_rest_expression();
+void match_symbol(int expected_token);
+void parse_parameter();
+
+int rd_lex() {
+    int c;
+    do {
+        c = getchar () ;
+    } while (c == ' ' || c == '\t') ;
     // end of file
     if (c == EOF) {
-        // printf ("\n");// Force an exit to avoid
         exit (0) ;// a Syntax Error
     }
     // digits
     if (isdigit(c)){
         ungetc(c, stdin);
         scanf("%d", &g_value);
-        g_token = T_NUMBER;  
-        int next_d = getchar();
-        // next character
-        if (next_d == ')'){
-            ungetc(next_d, stdin);
-            return g_token;
-        }
-        if (next_d != ' '){
-            fprintf(stderr, "Syntax error in line: %d.\n", g_line_counter);
-            exit(-1);
-        }
-            return g_token;     
+        g_token = T_NUMBER;
+        return g_token;
     }
     // variable
     if (isalpha(c)){
         g_token = T_VARIABLE;
-        int space = getchar();
-        // next character
-        if (space == ')'){
-            ungetc(space, stdin);
-            g_value = c;
-            return g_value;
-        }
-        if (space != ' '){ 
-            fprintf(stderr, "Syntax error in line: %d.\n", g_line_counter);
-            exit(-1);
-        }
         g_value = c;
-        return g_token; 
-    }  
-    // handling of parentesis and spaces
-    if (c !='(' && c != ')' && c != '\n'){
-        int next_char = getchar();
-        if (next_char != ' ' && next_char != ')'){
-            fprintf(stderr, "Syntax error in line: %d.\n", g_line_counter);
-            exit(-1);
-        }
-        if (next_char == ')' || next_char == '\n'){
-            ungetc(next_char, stdin);
-        }       
+        return g_token;
     }
-    
     // new line
     if (c == '\n'){
         g_line_counter++; // info for rd_syntax_error()
@@ -79,6 +53,7 @@ int rd_lex(){
     g_token = c;
     return g_token; // returns a literal
 }
+
 void rd_syntax_error(int expected, int token, char * output){
     if ('\n' == g_token){
         g_line_counter--;
@@ -99,7 +74,8 @@ void match_symbol(int expected_token){
 #define parse_open_paren() match_symbol('(');
 #define parse_close_paren() match_symbol(')');
 
-void parse_axiom(){ //S::=E
+void parse_axiom(){
+    //S::=E
     parse_expression();
     // print result
     strcat(g_output_str, ". \n");
@@ -108,12 +84,14 @@ void parse_axiom(){ //S::=E
     memset(g_output_str, 0, strlen(g_output_str));
 }
 
-void parse_expression(){ // E::=(R
+void parse_expression() {
+    // E::=(R
     parse_open_paren();
     parse_rest_expression();
 }
 
-void parse_rest_expression(){ //R::=oPP|=vP // o: Operador(token) = {+,-,*,/}. v: variable(token)
+void parse_rest_expression() {
+    //R::=oPP|=vP // o: Operador(token) = {+,-,*,/}. v: variable(token)
     switch(g_token){
         case '+':
         case '-':
@@ -129,7 +107,7 @@ void parse_rest_expression(){ //R::=oPP|=vP // o: Operador(token) = {+,-,*,/}. v
         case '=':
             rd_lex();
             char variable_str[MAX];
-            sprintf(variable_str, "%c ! ", g_value);
+            sprintf(variable_str, "dup %c ! ", g_value);
             match_symbol(T_VARIABLE);
             parse_parameter();
             strcat(g_output_str, variable_str);
@@ -143,7 +121,8 @@ void parse_rest_expression(){ //R::=oPP|=vP // o: Operador(token) = {+,-,*,/}. v
     parse_close_paren();
 }
 
-void parse_parameter(){//P::=E|v|n // n: numero(token). v: variable(token)
+void parse_parameter() {
+    //P::=E|v|n // n: numero(token). v: variable(token)
     switch(g_token){
         case T_NUMBER:
             char number_str[MAX];
@@ -157,8 +136,11 @@ void parse_parameter(){//P::=E|v|n // n: numero(token). v: variable(token)
             strcat(g_output_str, t_variable_str);
             rd_lex();
             break;
-        default:
+        case '(':
             parse_expression();
+            break;
+        default:
+            rd_syntax_error(g_token, 0, "Token %d was read\n");
     }
        
 }
@@ -166,6 +148,14 @@ void parse_parameter(){//P::=E|v|n // n: numero(token). v: variable(token)
 
 
 int main(int argc, char *argv[]){
+    printf("Variable A\n");
+    printf("Variable B\n");
+    printf("Variable C\n");
+    printf("Variable D\n");
+    printf("Variable Y\n");
+    printf("Variable X\n");
+    printf("Variable Z\n");
+
     int flagMultiple = 1;
     // check number of arguments
     if (argc >= 2){
@@ -177,7 +167,6 @@ int main(int argc, char *argv[]){
     {
         rd_lex(); // new line
         parse_axiom();
-        // printf("OK\n");
     } while (flagMultiple);
 
 
